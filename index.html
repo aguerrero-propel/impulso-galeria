@@ -146,7 +146,7 @@ function card(p) {
         <div class="met"><div class="met-val">${p.m[1]}</div><div class="met-lbl">${p.l[1]}</div></div>
         <div class="met"><div class="met-val">${p.m[2]}</div><div class="met-lbl">${p.l[2]}</div></div>
       </div>
-      ${p.insight ? '<div class="card-insight">💡 '+p.insight+'</div>' : ''}
+      ${p.insight ? `<div class="card-insight">💡 ${p.insight}</div>` : ""}
       <a href="${p.url}" target="_blank" class="card-link">Ver post →</a>
     </div>
   </div>`;
