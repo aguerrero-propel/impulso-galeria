@@ -9,80 +9,63 @@
   :root { --naranja: #ff7903; --borde: #ebebeb; --gris: #f7f7f5; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Libre Franklin', sans-serif; background: #fff; color: #1a1a1a; }
-
   header { background: var(--naranja); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
   header h1 { color: #fff; font-size: 15px; font-weight: 300; }
   header span { color: rgba(255,255,255,0.75); font-size: 11px; font-weight: 300; }
-
   .tabs { display: flex; overflow-x: auto; padding: 0 20px; border-bottom: 1px solid var(--borde); background: #fff; position: sticky; top: 0; z-index: 10; }
   .tabs::-webkit-scrollbar { display: none; }
   .tab { padding: 11px 14px; font-size: 11px; font-weight: 500; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0; }
   .tab.active { color: var(--naranja); border-bottom-color: var(--naranja); }
-
   .section { display: none; padding: 16px 20px; max-width: 1000px; margin: 0 auto; }
   .section.active { display: block; }
-
   .summary { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
   .kpi { background: var(--gris); border-radius: 8px; padding: 10px 14px; }
   .kpi-val { font-size: 17px; font-weight: 300; color: var(--naranja); line-height: 1; }
   .kpi-lbl { font-size: 10px; color: #888; margin-top: 3px; }
-
   .sec-label { font-size: 10px; font-weight: 500; color: var(--naranja); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-
-  /* Grid de tarjetas — 3 columnas fijas */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 220px)); gap: 12px; justify-content: start; }
   @media (max-width: 700px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-
   .card { border: 1px solid var(--borde); border-radius: 10px; overflow: hidden; background: #fff; max-width: 220px; }
   .card-img { width: 100%; aspect-ratio: 1 / 1; overflow: hidden; background: #f0f0ee; position: relative; }
   .card-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .ptag { position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
-  .pli { }
-  .pig { }
   .ptag svg { width: 14px; height: 14px; fill: rgba(255,255,255,0.9); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4)); }
-
   .card-body { padding: 6px 8px; }
-  .card-title { font-size: 9px; font-weight: 400; color: #1a1a1a; line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-title { font-size: 9px; font-weight: 400; color: #1a1a1a; line-height: 1.4; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .card-date { font-size: 9px; color: #bbb; margin-bottom: 5px; }
-
   .card-metrics { display: flex; gap: 0; border-top: 1px solid var(--borde); padding-top: 5px; margin-top: 3px; }
   .met { flex: 1; text-align: center; }
   .met + .met { border-left: 1px solid var(--borde); }
   .met-val { font-size: 11px; font-weight: 300; color: var(--naranja); }
   .met-lbl { font-size: 8px; color: #bbb; text-transform: uppercase; margin-top: 1px; }
-
-  .card-insight { font-size: 9px; color: #ff7903; font-style: italic; padding: 5px 8px; border-top: 1px solid var(--borde); line-height: 1.4; }
+  .card-insight { font-size: 9px; color: #888; font-style: italic; padding: 5px 8px; border-top: 1px solid var(--borde); line-height: 1.4; }
+  .card-insight span { color: var(--naranja); }
   .card-link { display: block; text-align: center; font-size: 9px; font-weight: 500; color: var(--naranja); text-decoration: none; padding: 5px; border-top: 1px solid var(--borde); margin-top: 5px; }
   .card-link:hover { background: #fff8f3; }
 </style>
 </head>
 <body>
-
 <header>
   <h1>Impulso — Galería de Posts</h1>
   <span>Rendimiento por plataforma</span>
 </header>
-
 <div class="tabs">
   <div class="tab active" onclick="showTab('li-propel',this)">LinkedIn Propel</div>
   <div class="tab" onclick="showTab('instagram',this)">Instagram</div>
   <div class="tab" onclick="showTab('claudia',this)">Clau LinkedIn</div>
   <div class="tab" onclick="showTab('mafe',this)">Mafe LinkedIn</div>
-  
-  
-  
-  
 </div>
-
-<div id="todos" class="section"><div class="summary" id="sum-todos"></div><div class="sec-label">Blogs publicados — sin duplicados</div><div class="grid" id="grid-todos"></div></div>
 <div id="li-propel" class="section active"><div class="summary" id="sum-li"></div><div class="sec-label">LinkedIn Propel</div><div class="grid" id="grid-li"></div></div>
 <div id="instagram" class="section"><div class="summary" id="sum-ig"></div><div class="sec-label">Instagram @wepropelorg</div><div class="grid" id="grid-ig"></div></div>
 <div id="claudia" class="section"><div class="summary" id="sum-clau"></div><div class="sec-label">Claudia Belmont — LinkedIn</div><div class="grid" id="grid-clau"></div></div>
 <div id="mafe" class="section"><div class="summary" id="sum-mafe"></div><div class="sec-label">María Fernanda Sierra — LinkedIn</div><div class="grid" id="grid-mafe"></div></div>
 
 <script>
-const B = "https://aguerrero-propel.github.io/impulso-galeria/";
-const I = {
+var LI_SVG = '<svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>';
+var IG_SVG = '<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>';
+
+var B = "https://aguerrero-propel.github.io/impulso-galeria/";
+var I = {
   "no-cedas": B+"no-cedas.jpg", "atreviendonos": B+"atreviendonos.jpg",
   "deja-ia": B+"deja-ia.jpg", "demostrar": B+"demostrar.jpg",
   "el-salto": B+"el-salto.jpg", "lanzamiento": B+"lanzamiento.jpg",
@@ -91,92 +74,91 @@ const I = {
   "proposito": B+"proposito.jpg", "asumir": B+"asumir.jpg"
 };
 
-const posts = {
+var posts = {
   li: [
-    { titulo:"No cedas quién eres por un sí — Mafe", insight:"Top post. Historia personal = mayor interacción.", fecha:"May 28, 2026", m:[673,233,"36.4%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7465811765855956992", img:I["no-cedas"], tag:"pli", plat:"LinkedIn Propel" },
-    { titulo:"De asumir a preguntar — Clau", insight:"Bajo CTR. Añade link en texto, no solo en comentarios.", fecha:"May 7, 2026", m:[392,7,"2.6%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7458172702303059969", img:I["asumir"], tag:"pli", plat:"LinkedIn Propel" },
-    { titulo:"Deja de correr atrás de la IA — Mafe", insight:"Buen tema. El gancho personal falta al inicio.", fecha:"Apr 23, 2026", m:[365,5,"3.8%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7453105288108306432", img:I["deja-ia"], tag:"pli", plat:"LinkedIn Propel" },
-    { titulo:"El salto que nadie te dice cómo dar — Clau", insight:"Sólido. Los posts con contexto propio superan a los informativos.", fecha:"Apr 9, 2026", m:[526,19,"6.1%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7448024307710148609", img:I["el-salto"], tag:"pli", plat:"LinkedIn Propel" },
-    { titulo:"Cuando el propósito no es suficiente — Diego", insight:"Mayor alcance del período. Invitados externos amplifican.", fecha:"Mar 26, 2026", m:[1157,22,"4.0%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7442966320377294848", img:I["proposito"], tag:"pli", plat:"LinkedIn Propel" },
-    { titulo:"De Mejorar a Crecer — Clau", insight:"Buen engagement. Feedback 360 resuena con líderes.", fecha:"Mar 5, 2026", m:[803,19,"3.2%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7435426956981981185", img:I["mejorar"], tag:"pli", plat:"LinkedIn Propel" },
-    { titulo:"No puedes hacerlo todo — Mafe", insight:"Alto alcance. Carrusel es tu mejor formato.", fecha:"Feb 17, 2026", m:[926,38,"6.9%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7429588830732574722", img:I["no-puedes"], tag:"pli", plat:"LinkedIn Propel" },
-    { titulo:"Liderar con intención — Clau", insight:"Mejor ratio clics/impresiones. CTA claro funciona.", fecha:"Jan 29, 2026", m:[1264,77,"8.2%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7422656090707845120", img:I["liderar"], tag:"pli", plat:"LinkedIn Propel" },
-    { titulo:"De demostrar a compartir — Clau", insight:"Buena interacción. La vulnerabilidad convierte.", fecha:"Dec 16, 2025", m:[695,26,"7.3%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7406749552281812992", img:I["demostrar"], tag:"pli", plat:"LinkedIn Propel" },
-    { titulo:"Atreviéndonos a usar nuestra voz — Clau y Mafe", insight:"Lanzamiento viral. Dupla fundadoras genera confianza.", fecha:"Dec 4, 2025", m:[849,259,"31.8%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7402477701980135424", img:I["atreviendonos"], tag:"pli", plat:"LinkedIn Propel" },
-    { titulo:"¡Lanzamos Impulso!", insight:"Alto CTR de lanzamiento. Primeros posts siempre pican más.", fecha:"Dec 2, 2025", m:[783,207,"29.6%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7401658863223087106", img:I["lanzamiento"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"No cedas quién eres por un sí — Mafe", fecha:"May 28, 2026", m:[673,233,"36.4%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7465811765855956992", img:I["no-cedas"], tag:"pli", insight:"Top post. Historia personal = mayor interacción." },
+    { titulo:"De asumir a preguntar — Clau", fecha:"May 7, 2026", m:[392,7,"2.6%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7458172702303059969", img:I["asumir"], tag:"pli", insight:"Bajo CTR. Añade link en texto, no en comentarios." },
+    { titulo:"Deja de correr atrás de la IA — Mafe", fecha:"Apr 23, 2026", m:[365,5,"3.8%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7453105288108306432", img:I["deja-ia"], tag:"pli", insight:"Buen tema. Falta gancho personal al inicio." },
+    { titulo:"El salto que nadie te dice cómo dar — Clau", fecha:"Apr 9, 2026", m:[526,19,"6.1%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7448024307710148609", img:I["el-salto"], tag:"pli", insight:"Sólido. Contexto propio supera contenido informativo." },
+    { titulo:"Cuando el propósito no es suficiente — Diego", fecha:"Mar 26, 2026", m:[1157,22,"4.0%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7442966320377294848", img:I["proposito"], tag:"pli", insight:"Mayor alcance del período. Invitados externos amplifican." },
+    { titulo:"De Mejorar a Crecer — Clau", fecha:"Mar 5, 2026", m:[803,19,"3.2%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7435426956981981185", img:I["mejorar"], tag:"pli", insight:"Buen engagement. Feedback 360 resuena con líderes." },
+    { titulo:"No puedes hacerlo todo — Mafe", fecha:"Feb 17, 2026", m:[926,38,"6.9%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7429588830732574722", img:I["no-puedes"], tag:"pli", insight:"Alto alcance. Carrusel es tu mejor formato." },
+    { titulo:"Liderar con intención — Clau", fecha:"Jan 29, 2026", m:[1264,77,"8.2%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7422656090707845120", img:I["liderar"], tag:"pli", insight:"Mejor ratio clics/impresiones. CTA claro funciona." },
+    { titulo:"De demostrar a compartir — Clau", fecha:"Dec 16, 2025", m:[695,26,"7.3%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7406749552281812992", img:I["demostrar"], tag:"pli", insight:"Buena interacción. La vulnerabilidad convierte." },
+    { titulo:"Atreviéndonos a usar nuestra voz", fecha:"Dec 4, 2025", m:[849,259,"31.8%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7402477701980135424", img:I["atreviendonos"], tag:"pli", insight:"Viral de lanzamiento. Dupla fundadoras genera confianza." },
+    { titulo:"Lanzamos Impulso", fecha:"Dec 2, 2025", m:[783,207,"29.6%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7401658863223087106", img:I["lanzamiento"], tag:"pli", insight:"Alto CTR. Primeros posts siempre generan más impacto." }
   ],
   ig: [
-    { titulo:"No cedas quién eres por un sí — Mafe", fecha:"May 28, 2026", m:[354,23,6], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DY43Q5BDg0I/", img:I["no-cedas"], tag:"pig", plat:"Instagram" },
-    { titulo:"De asumir a preguntar — Clau", fecha:"May 7, 2026", m:[363,18,1], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DYCr3mAjnIs/", img:I["asumir"], tag:"pig", plat:"Instagram" },
-    { titulo:"Deja de correr atrás de la IA — Mafe", fecha:"Apr 23, 2026", m:[454,19,2], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DXerO0LiMcr/", img:I["deja-ia"], tag:"pig", plat:"Instagram" },
-    { titulo:"El salto que nadie te dice cómo dar — Clau", fecha:"Apr 9, 2026", m:[321,20,0], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DW6l2fUjkWR/", img:I["el-salto"], tag:"pig", plat:"Instagram" },
-    { titulo:"Cuando el propósito no es suficiente — Diego", fecha:"Mar 26, 2026", m:[335,10,0], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DWWpGlxDlHM/", img:I["proposito"], tag:"pig", plat:"Instagram" },
-    { titulo:"De Mejorar a Crecer — Clau", fecha:"Mar 5, 2026", m:[342,17,1], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DVhEeccjnYd/", img:I["mejorar"], tag:"pig", plat:"Instagram" },
-    { titulo:"No puedes hacerlo todo — Mafe", fecha:"Feb 17, 2026", m:[317,20,0], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DU3luAvjkw6/", img:I["no-puedes"], tag:"pig", plat:"Instagram" },
-    { titulo:"Liderar con intención — Clau", fecha:"Jan 29, 2026", m:[367,32,3], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DUGWvNQjhir/", img:I["liderar"], tag:"pig", plat:"Instagram" },
+    { titulo:"No cedas quién eres por un sí — Mafe", fecha:"May 28, 2026", m:[354,23,6], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DY43Q5BDg0I/", img:I["no-cedas"], tag:"pig", insight:"Mejor alcance reciente. Historia personal conecta." },
+    { titulo:"De asumir a preguntar — Clau", fecha:"May 7, 2026", m:[363,18,1], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DYCr3mAjnIs/", img:I["asumir"], tag:"pig", insight:"Buen alcance. Sube frecuencia de este formato." },
+    { titulo:"Deja de correr atrás de la IA — Mafe", fecha:"Apr 23, 2026", m:[454,19,2], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DXerO0LiMcr/", img:I["deja-ia"], tag:"pig", insight:"Mayor alcance de IG. IA + liderazgo es combo ganador." },
+    { titulo:"El salto que nadie te dice cómo dar — Clau", fecha:"Apr 9, 2026", m:[321,20,0], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DW6l2fUjkWR/", img:I["el-salto"], tag:"pig", insight:"Alcance sólido. Añade CTA para guardar." },
+    { titulo:"Cuando el propósito no es suficiente — Diego", fecha:"Mar 26, 2026", m:[335,10,0], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DWWpGlxDlHM/", img:I["proposito"], tag:"pig", insight:"Invitado externo amplifica. Repite el formato." },
+    { titulo:"De Mejorar a Crecer — Clau", fecha:"Mar 5, 2026", m:[342,17,1], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DVhEeccjnYd/", img:I["mejorar"], tag:"pig", insight:"Promedio estable. Prueba carrusel para más guardados." },
+    { titulo:"No puedes hacerlo todo — Mafe", fecha:"Feb 17, 2026", m:[317,20,0], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DU3luAvjkw6/", img:I["no-puedes"], tag:"pig", insight:"Buen alcance. Foto con persona real supera gráficas." },
+    { titulo:"Liderar con intención — Clau", fecha:"Jan 29, 2026", m:[367,32,3], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DUGWvNQjhir/", img:I["liderar"], tag:"pig", insight:"Mayor alcance histórico. Foto grupal engancha más." }
   ],
   clau: [
-    { titulo:"Lanzamos Impulso", insight:"Tu post más viral. El lanzamiento en primera persona genera 4x más engagement.", fecha:"Dec 2, 2025", m:[178,34,213], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hoy-dimos-un-paso-importante-en-propel-mafe-activity-7401752624506851328-9Oem", img:I["lanzamiento"], tag:"pli", plat:"Clau LinkedIn" },
-    { titulo:"De Demostrar a Compartir", insight:"Alta interacción. La vulnerabilidad convierte mejor que los logros.", fecha:"Dec 16, 2025", m:[183,26,210], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_durante-mucho-tiempo-sent%C3%AD-que-ten%C3%ADa-que-activity-7406746151347195904-CgB6", img:I["demostrar"], tag:"pli", plat:"Clau LinkedIn" },
-    { titulo:"Lidera con intención", insight:"Buen engagement. Las preguntas al final duplican comentarios.", fecha:"Jan 29, 2026", m:[106,17,124], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_liderar-con-intenci%C3%B3n-activity-7422729440461500416-Ffal", img:I["liderar"], tag:"pli", plat:"Clau LinkedIn" },
-    { titulo:"De Mejorar a Crecer", insight:"Bajo engagement. Agrega un CTA más directo al final.", fecha:"Mar 5, 2026", m:[63,7,72], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hace-poco-terminamos-nuestro-proceso-de-feedback-activity-7435427913933557760-P3vY", img:I["mejorar"], tag:"pli", plat:"Clau LinkedIn" },
-    { titulo:"El salto que nadie te dice cómo dar", insight:"Sólido. Los posts con contexto propio superan a los informativos.", fecha:"Apr 9, 2026", m:[72,3,76], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hay-un-momento-que-seguro-has-vivido-la-activity-7448030257418272768-8odC", img:I["el-salto"], tag:"pli", plat:"Clau LinkedIn" },
-    { titulo:"De asumir a preguntar", insight:"Menor alcance. Prueba iniciar con la historia antes que la reflexión.", fecha:"May 7, 2026", m:[43,9,52], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_lo-que-no-se-dice-se-acumula-empieza-cuando-activity-7458178388550406144--O1M", img:I["asumir"], tag:"pli", plat:"Clau LinkedIn" },
+    { titulo:"Lanzamos Impulso", fecha:"Dec 2, 2025", m:[178,34,213], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hoy-dimos-un-paso-importante-en-propel-mafe-activity-7401752624506851328-9Oem", img:I["lanzamiento"], tag:"pli", insight:"Tu post más viral. Primera persona genera 4x más engagement." },
+    { titulo:"De Demostrar a Compartir", fecha:"Dec 16, 2025", m:[183,26,210], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_durante-mucho-tiempo-sent%C3%AD-que-ten%C3%ADa-que-activity-7406746151347195904-CgB6", img:I["demostrar"], tag:"pli", insight:"Alta interacción. La vulnerabilidad convierte mejor que los logros." },
+    { titulo:"Lidera con intención", fecha:"Jan 29, 2026", m:[106,17,124], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_liderar-con-intenci%C3%B3n-activity-7422729440461500416-Ffal", img:I["liderar"], tag:"pli", insight:"Buen engagement. Las preguntas al final duplican comentarios." },
+    { titulo:"De Mejorar a Crecer", fecha:"Mar 5, 2026", m:[63,7,72], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hace-poco-terminamos-nuestro-proceso-de-feedback-activity-7435427913933557760-P3vY", img:I["mejorar"], tag:"pli", insight:"Bajo engagement. Agrega CTA más directo al final." },
+    { titulo:"El salto que nadie te dice cómo dar", fecha:"Apr 9, 2026", m:[72,3,76], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hay-un-momento-que-seguro-has-vivido-la-activity-7448030257418272768-8odC", img:I["el-salto"], tag:"pli", insight:"Sólido. Contexto propio supera contenido informativo." },
+    { titulo:"De asumir a preguntar", fecha:"May 7, 2026", m:[43,9,52], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_lo-que-no-se-dice-se-acumula-empieza-cuando-activity-7458178388550406144--O1M", img:I["asumir"], tag:"pli", insight:"Menor alcance. Inicia con la historia antes que la reflexión." }
   ],
   mafe: [
-    { titulo:"Lanzamos Impulso", insight:"Tu post más viral. El lanzamiento en primera persona genera 4x más engagement.", fecha:"Dec 2, 2025", m:[101,13,115], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_hoy-lanzamos-impulso-un-espacio-que-clau-activity-7401756079619088384-p8wj", img:I["lanzamiento"], tag:"pli", plat:"Mafe LinkedIn" },
-    { titulo:"Permitiéndonos soñar en 2026", insight:"Buena apertura de año. Los posts de reflexión conectan mejor en enero.", fecha:"Jan 15, 2026", m:[43,8,54], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_como-l%C3%ADderes-sociales-dejamos-de-so%C3%B1ar-activity-7417650200258863104-JLso", img:I["permitiendonos"], tag:"pli", plat:"Mafe LinkedIn" },
-    { titulo:"No puedes hacerlo todo", insight:"Tu mejor post post-maternidad. El carrusel con historia personal es tu formato ganador.", fecha:"Feb 17, 2026", m:[112,28,143], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_carrusel-no-puedes-hacerlo-todo-activity-7429922949056569344-G3MR", img:I["no-puedes"], tag:"pli", plat:"Mafe LinkedIn" },
-    { titulo:"Deja de correr atrás de la IA", insight:"Bajo engagement. El tema es fuerte pero falta el gancho personal al inicio.", fecha:"Apr 23, 2026", m:[29,5,35], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_una-conversaci%C3%B3n-con-la-ia-puede-cambiar-activity-7453136510532644865-6nGg", img:I["deja-ia"], tag:"pli", plat:"Mafe LinkedIn" },
-    { titulo:"No cedas quién eres por un sí", insight:"Reciente y con buen potencial. Dale más tiempo para que crezca el alcance.", fecha:"May 28, 2026", m:[26,4,33], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_impulso-claridad-activity-7466178273534771200-nT09", img:I["no-cedas"], tag:"pli", plat:"Mafe LinkedIn" },
+    { titulo:"Lanzamos Impulso", fecha:"Dec 2, 2025", m:[101,13,115], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_hoy-lanzamos-impulso-un-espacio-que-clau-activity-7401756079619088384-p8wj", img:I["lanzamiento"], tag:"pli", insight:"Top post. Narrativa de lanzamiento en dupla amplifica el alcance." },
+    { titulo:"Permitiéndonos soñar en 2026", fecha:"Jan 15, 2026", m:[43,8,54], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_como-l%C3%ADderes-sociales-dejamos-de-so%C3%B1ar-activity-7417650200258863104-JLso", img:I["permitiendonos"], tag:"pli", insight:"Buena apertura de año. Reflexión conecta mejor en enero." },
+    { titulo:"No puedes hacerlo todo", fecha:"Feb 17, 2026", m:[112,28,143], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_carrusel-no-puedes-hacerlo-todo-activity-7429922949056569344-G3MR", img:I["no-puedes"], tag:"pli", insight:"Tu mejor formato. Carrusel + historia personal es tu combo ganador." },
+    { titulo:"Deja de correr atrás de la IA", fecha:"Apr 23, 2026", m:[29,5,35], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_una-conversaci%C3%B3n-con-la-ia-puede-cambiar-activity-7453136510532644865-6nGg", img:I["deja-ia"], tag:"pli", insight:"Bajo engagement. Falta gancho personal en la apertura." },
+    { titulo:"No cedas quién eres por un sí", fecha:"May 28, 2026", m:[26,4,33], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_impulso-claridad-activity-7466178273534771200-nT09", img:I["no-cedas"], tag:"pli", insight:"Reciente. Dale tiempo — los posts de historia crecen en 72h." }
   ]
 };
 
 function card(p) {
-  return `<div class="card">
-    <div class="card-img">
-      <img src="${p.img}" alt="${p.titulo}" onerror="this.style.background='#ffe8d6';this.style.display='block'">
-      <span class="ptag ${p.tag}">${p.tag==='pli' ? '<svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>'}</span>
-    </div>
-    <div class="card-body">
-      <div class="card-title">${p.titulo}</div>
-      <div class="card-date">${p.fecha}</div>
-      <div class="card-metrics">
-        <div class="met"><div class="met-val">${typeof p.m[0]==='number'?p.m[0].toLocaleString():p.m[0]}</div><div class="met-lbl">${p.l[0]}</div></div>
-        <div class="met"><div class="met-val">${p.m[1]}</div><div class="met-lbl">${p.l[1]}</div></div>
-        <div class="met"><div class="met-val">${p.m[2]}</div><div class="met-lbl">${p.l[2]}</div></div>
-      </div>
-      ${p.insight ? `<div class="card-insight">💡 ${p.insight}</div>` : ""}
-      <a href="${p.url}" target="_blank" class="card-link">Ver post →</a>
-    </div>
-  </div>`;
+  var icon = p.tag === 'pli' ? LI_SVG : IG_SVG;
+  var insight = p.insight ? '<div class="card-insight">💡 ' + p.insight + '</div>' : '';
+  var m0 = typeof p.m[0] === 'number' ? p.m[0].toLocaleString() : p.m[0];
+  return '<div class="card">' +
+    '<div class="card-img">' +
+      '<img src="' + p.img + '" alt="' + p.titulo + '" onerror="this.style.background=\'#ffe8d6\'">' +
+      '<span class="ptag">' + icon + '</span>' +
+    '</div>' +
+    '<div class="card-body">' +
+      '<div class="card-title">' + p.titulo + '</div>' +
+      '<div class="card-date">' + p.fecha + '</div>' +
+      '<div class="card-metrics">' +
+        '<div class="met"><div class="met-val">' + m0 + '</div><div class="met-lbl">' + p.l[0] + '</div></div>' +
+        '<div class="met"><div class="met-val">' + p.m[1] + '</div><div class="met-lbl">' + p.l[1] + '</div></div>' +
+        '<div class="met"><div class="met-val">' + p.m[2] + '</div><div class="met-lbl">' + p.l[2] + '</div></div>' +
+      '</div>' +
+      insight +
+      '<a href="' + p.url + '" target="_blank" class="card-link">Ver post →</a>' +
+    '</div>' +
+  '</div>';
 }
 
-function kpi(label,val) { return `<div class="kpi"><div class="kpi-val">${val}</div><div class="kpi-lbl">${label}</div></div>`; }
-function render(gId,sId,data,sumHtml) {
+function kpi(label, val) {
+  return '<div class="kpi"><div class="kpi-val">' + val + '</div><div class="kpi-lbl">' + label + '</div></div>';
+}
+
+function render(gId, sId, data, sumHtml) {
   document.getElementById(gId).innerHTML = data.map(card).join('');
   document.getElementById(sId).innerHTML = sumHtml;
 }
 
-render('grid-li','sum-li', posts.li,
-  kpi('Posts',posts.li.length)+kpi('Impresiones',posts.li.reduce((a,p)=>a+p.m[0],0).toLocaleString())+kpi('Clics',posts.li.reduce((a,p)=>a+p.m[1],0)));
-render('grid-ig','sum-ig', posts.ig,
-  kpi('Posts',posts.ig.length)+kpi('Alcance',posts.ig.reduce((a,p)=>a+p.m[0],0).toLocaleString())+kpi('Likes',posts.ig.reduce((a,p)=>a+p.m[1],0)));
-render('grid-clau','sum-clau', posts.clau,
-  kpi('Posts',posts.clau.length)+kpi('Interacciones',posts.clau.reduce((a,p)=>a+p.m[2],0)));
-render('grid-mafe','sum-mafe', posts.mafe,
-  kpi('Posts',posts.mafe.length)+kpi('Interacciones',posts.mafe.reduce((a,p)=>a+p.m[2],0)));
+render('grid-li', 'sum-li', posts.li,
+  kpi('Posts', posts.li.length) + kpi('Impresiones', posts.li.reduce(function(a,p){return a+p.m[0];},0).toLocaleString()) + kpi('Clics', posts.li.reduce(function(a,p){return a+p.m[1];},0)));
+render('grid-ig', 'sum-ig', posts.ig,
+  kpi('Posts', posts.ig.length) + kpi('Alcance', posts.ig.reduce(function(a,p){return a+p.m[0];},0).toLocaleString()) + kpi('Likes', posts.ig.reduce(function(a,p){return a+p.m[1];},0)));
+render('grid-clau', 'sum-clau', posts.clau,
+  kpi('Posts', posts.clau.length) + kpi('Interacciones', posts.clau.reduce(function(a,p){return a+p.m[2];},0)));
+render('grid-mafe', 'sum-mafe', posts.mafe,
+  kpi('Posts', posts.mafe.length) + kpi('Interacciones', posts.mafe.reduce(function(a,p){return a+p.m[2];},0)));
 
-const seen = new Set();
-const unique = [...posts.li,...posts.ig,...posts.clau,...posts.mafe].filter(p => {
-  const k = p.titulo.split('—')[0].trim().toLowerCase();
-  if(seen.has(k)) return false; seen.add(k); return true;
-});
-render('grid-todos','sum-todos', unique, kpi('Blogs',unique.length)+kpi('Plataformas',3));
-
-function showTab(id,el) {
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+function showTab(id, el) {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
   el.classList.add('active');
 }
