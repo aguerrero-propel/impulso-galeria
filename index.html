@@ -6,137 +6,186 @@
 <title>Impulso — Galería de Posts</title>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { --naranja: #ff7903; }
+  :root { --naranja: #ff7903; --gris: #f7f7f5; --borde: #ebebeb; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Libre Franklin', sans-serif; background: #fff; color: #1a1a1a; }
-  header { background: var(--naranja); padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; }
-  header h1 { color: #fff; font-size: 18px; font-weight: 800; }
-  header span { color: rgba(255,255,255,0.8); font-size: 12px; }
-  .tabs { display: flex; padding: 0 28px; border-bottom: 1.5px solid #eee; background: #fff; position: sticky; top: 0; z-index: 10; }
-  .tab { padding: 13px 18px; font-size: 11px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: 0.5px; }
+  body { font-family: 'Libre Franklin', sans-serif; background: #fff; color: #1a1a1a; font-size: 13px; }
+
+  header { background: var(--naranja); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { color: #fff; font-size: 15px; font-weight: 800; letter-spacing: -0.2px; }
+  header span { color: rgba(255,255,255,0.75); font-size: 11px; }
+
+  .tabs { display: flex; padding: 0 24px; border-bottom: 1px solid var(--borde); background: #fff; position: sticky; top: 0; z-index: 10; }
+  .tab { padding: 11px 16px; font-size: 11px; font-weight: 600; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
   .tab.active { color: var(--naranja); border-bottom-color: var(--naranja); }
-  .section { display: none; padding: 20px 28px; }
+
+  .section { display: none; padding: 16px 24px; }
   .section.active { display: block; }
-  .summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 10px; margin-bottom: 20px; }
-  .kpi { background: #fafafa; border-radius: 10px; padding: 12px 14px; }
-  .kpi-val { font-size: 20px; font-weight: 800; color: var(--naranja); }
-  .kpi-label { font-size: 10px; color: #888; margin-top: 2px; }
-  .sec-title { font-size: 11px; font-weight: 700; color: var(--naranja); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 14px; }
-  .card { background: #fff; border: 0.5px solid #e8e8e8; border-radius: 12px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
-  .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-  .card-img { height: 160px; background: #f5f5f3; position: relative; overflow: hidden; }
-  .card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .fallback { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: linear-gradient(135deg,#fff8f3,#ffe8d6); font-size: 11px; color: #888; text-align: center; padding: 14px; line-height: 1.5; }
-  .ptag { position: absolute; top: 8px; right: 8px; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 20px; letter-spacing: 0.5px; }
+
+  /* Vista resumen — una fila por post */
+  .post-list { display: flex; flex-direction: column; gap: 8px; }
+  .post-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; background: #fff; border: 1px solid var(--borde); border-radius: 10px; padding: 10px 14px; transition: box-shadow 0.15s; }
+  .post-row:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .post-thumb { width: 56px; height: 56px; border-radius: 7px; object-fit: cover; background: var(--gris); flex-shrink: 0; }
+  .post-info { min-width: 0; }
+  .post-title { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .post-meta { display: flex; align-items: center; gap: 8px; }
+  .post-date { font-size: 10px; color: #aaa; }
+  .ptag { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; letter-spacing: 0.3px; }
   .pli { background: #e8f0fb; color: #1a56a0; }
   .pig { background: #fde8f0; color: #b5154e; }
-  .card-body { padding: 12px 14px; }
-  .card-title { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; line-height: 1.4; }
-  .card-date { font-size: 10px; color: #999; margin-bottom: 10px; }
-  .metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-bottom: 10px; }
-  .met { text-align: center; }
-  .met-val { font-size: 14px; font-weight: 700; color: var(--naranja); }
-  .met-lbl { font-size: 9px; color: #999; text-transform: uppercase; margin-top: 1px; }
-  .card-link { display: block; text-align: center; font-size: 10px; font-weight: 600; color: var(--naranja); text-decoration: none; padding: 6px; border: 1px solid #ffe0c2; border-radius: 6px; }
-  .card-link:hover { background: #fff3eb; }
+  .post-metrics { display: flex; gap: 16px; align-items: center; flex-shrink: 0; }
+  .metric { text-align: right; }
+  .metric-val { font-size: 13px; font-weight: 700; color: var(--naranja); line-height: 1; }
+  .metric-lbl { font-size: 9px; color: #bbb; text-transform: uppercase; margin-top: 1px; }
+  .post-link { font-size: 10px; font-weight: 600; color: var(--naranja); text-decoration: none; white-space: nowrap; padding: 5px 10px; border: 1px solid #ffe0c2; border-radius: 6px; }
+  .post-link:hover { background: #fff3eb; }
+
+  /* KPIs resumen */
+  .summary { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .kpi { background: var(--gris); border-radius: 8px; padding: 10px 14px; min-width: 100px; }
+  .kpi-val { font-size: 18px; font-weight: 800; color: var(--naranja); line-height: 1; }
+  .kpi-lbl { font-size: 10px; color: #888; margin-top: 2px; }
+
+  .sec-label { font-size: 10px; font-weight: 700; color: var(--naranja); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
 </style>
 </head>
 <body>
+
 <header>
   <h1>Impulso — Galería de Posts</h1>
   <span>Rendimiento por plataforma</span>
 </header>
+
 <div class="tabs">
-  <div class="tab active" onclick="showTab('todos',this)">Todos</div>
+  <div class="tab active" onclick="showTab('todos',this)">Resumen</div>
   <div class="tab" onclick="showTab('li-propel',this)">LinkedIn Propel</div>
   <div class="tab" onclick="showTab('instagram',this)">Instagram</div>
   <div class="tab" onclick="showTab('claudia',this)">Clau</div>
   <div class="tab" onclick="showTab('mafe',this)">Mafe</div>
 </div>
-<div id="todos" class="section active"><div class="summary" id="sum-todos"></div><div class="sec-title">Todos los posts</div><div class="grid" id="grid-todos"></div></div>
-<div id="li-propel" class="section"><div class="summary" id="sum-li"></div><div class="sec-title">LinkedIn Propel</div><div class="grid" id="grid-li"></div></div>
-<div id="instagram" class="section"><div class="summary" id="sum-ig"></div><div class="sec-title">Instagram</div><div class="grid" id="grid-ig"></div></div>
-<div id="claudia" class="section"><div class="summary" id="sum-clau"></div><div class="sec-title">Claudia LinkedIn</div><div class="grid" id="grid-clau"></div></div>
-<div id="mafe" class="section"><div class="summary" id="sum-mafe"></div><div class="sec-title">Mafe LinkedIn</div><div class="grid" id="grid-mafe"></div></div>
+
+<div id="todos" class="section active">
+  <div class="summary" id="sum-todos"></div>
+  <div class="sec-label">Todos los posts — por edición</div>
+  <div class="post-list" id="grid-todos"></div>
+</div>
+<div id="li-propel" class="section">
+  <div class="summary" id="sum-li"></div>
+  <div class="sec-label">LinkedIn Propel</div>
+  <div class="post-list" id="grid-li"></div>
+</div>
+<div id="instagram" class="section">
+  <div class="summary" id="sum-ig"></div>
+  <div class="sec-label">Instagram @wepropelorg</div>
+  <div class="post-list" id="grid-ig"></div>
+</div>
+<div id="claudia" class="section">
+  <div class="summary" id="sum-clau"></div>
+  <div class="sec-label">Claudia Belmont — LinkedIn personal</div>
+  <div class="post-list" id="grid-clau"></div>
+</div>
+<div id="mafe" class="section">
+  <div class="summary" id="sum-mafe"></div>
+  <div class="sec-label">María Fernanda Sierra — LinkedIn personal</div>
+  <div class="post-list" id="grid-mafe"></div>
+</div>
 
 <script>
 const B = "https://aguerrero-propel.github.io/impulso-galeria/";
 const I = {
-  "no-cedas": B+"no-cedas.jpg",
-  "atreviendonos": B+"atreviendonos.jpg",
-  "deja-ia": B+"deja-ia.jpg",
-  "demostrar": B+"demostrar.jpg",
-  "el-salto": B+"el-salto.jpg",
-  "lanzamiento": B+"lanzamiento.jpg",
-  "liderar": B+"liderar.jpg",
-  "mejorar": B+"mejorar.jpg",
-  "no-puedes": B+"no-puedes.jpg",
-  "permitiendonos": B+"permitiendonos.jpg",
-  "proposito": B+"proposito.jpg",
-  "asumir": B+"asumir.jpg"
+  "no-cedas": B+"no-cedas.jpg", "atreviendonos": B+"atreviendonos.jpg",
+  "deja-ia": B+"deja-ia.jpg", "demostrar": B+"demostrar.jpg",
+  "el-salto": B+"el-salto.jpg", "lanzamiento": B+"lanzamiento.jpg",
+  "liderar": B+"liderar.jpg", "mejorar": B+"mejorar.jpg",
+  "no-puedes": B+"no-puedes.jpg", "permitiendonos": B+"permitiendonos.jpg",
+  "proposito": B+"proposito.jpg", "asumir": B+"asumir.jpg"
 };
 
 const posts = {
   li: [
-    { titulo:"No cedas quién eres por un sí — Mafe", fecha:"May 28, 2026", imp:673, clics:233, tasa:36.4, url:"https://www.linkedin.com/feed/update/urn:li:activity:7465811765855956992", img:I["no-cedas"] },
-    { titulo:"De asumir a preguntar — Clau", fecha:"May 7, 2026", imp:392, clics:7, tasa:2.6, url:"https://www.linkedin.com/feed/update/urn:li:activity:7458172702303059969", img:I["asumir"] },
-    { titulo:"Deja de correr atrás de la IA — Mafe", fecha:"Apr 23, 2026", imp:365, clics:5, tasa:3.8, url:"https://www.linkedin.com/feed/update/urn:li:activity:7453105288108306432", img:I["deja-ia"] },
-    { titulo:"El salto que nadie te dice cómo dar — Clau", fecha:"Apr 9, 2026", imp:526, clics:19, tasa:6.1, url:"https://www.linkedin.com/feed/update/urn:li:activity:7448024307710148609", img:I["el-salto"] },
-    { titulo:"Cuando el propósito no es suficiente — Diego Ontaneda", fecha:"Mar 26, 2026", imp:1157, clics:22, tasa:4.0, url:"https://www.linkedin.com/feed/update/urn:li:activity:7442966320377294848", img:I["proposito"] },
-    { titulo:"De Mejorar a Crecer — Clau", fecha:"Mar 5, 2026", imp:803, clics:19, tasa:3.2, url:"https://www.linkedin.com/feed/update/urn:li:activity:7435426956981981185", img:I["mejorar"] },
-    { titulo:"No puedes hacerlo todo — Mafe", fecha:"Feb 17, 2026", imp:926, clics:38, tasa:6.9, url:"https://www.linkedin.com/feed/update/urn:li:activity:7429588830732574722", img:I["no-puedes"] },
-    { titulo:"Liderar con intención — Clau", fecha:"Jan 29, 2026", imp:1264, clics:77, tasa:8.2, url:"https://www.linkedin.com/feed/update/urn:li:activity:7422656090707845120", img:I["liderar"] },
-    { titulo:"De demostrar a compartir — Clau", fecha:"Dec 16, 2025", imp:695, clics:26, tasa:7.3, url:"https://www.linkedin.com/feed/update/urn:li:activity:7406749552281812992", img:I["demostrar"] },
-    { titulo:"Atreviéndonos a usar nuestra voz — Clau y Mafe", fecha:"Dec 4, 2025", imp:849, clics:259, tasa:31.8, url:"https://www.linkedin.com/feed/update/urn:li:activity:7402477701980135424", img:I["atreviendonos"] },
-    { titulo:"¡Lanzamos Impulso!", fecha:"Dec 2, 2025", imp:783, clics:207, tasa:29.6, url:"https://www.linkedin.com/feed/update/urn:li:activity:7401658863223087106", img:I["lanzamiento"] },
+    { titulo:"No cedas quién eres por un sí — Mafe", fecha:"May 28, 2026", m1:673, m2:233, m3:"36.4%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7465811765855956992", img:I["no-cedas"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"De asumir a preguntar — Clau", fecha:"May 7, 2026", m1:392, m2:7, m3:"2.6%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7458172702303059969", img:I["asumir"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"Deja de correr atrás de la IA — Mafe", fecha:"Apr 23, 2026", m1:365, m2:5, m3:"3.8%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7453105288108306432", img:I["deja-ia"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"El salto que nadie te dice cómo dar — Clau", fecha:"Apr 9, 2026", m1:526, m2:19, m3:"6.1%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7448024307710148609", img:I["el-salto"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"Cuando el propósito no es suficiente — Diego", fecha:"Mar 26, 2026", m1:1157, m2:22, m3:"4.0%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7442966320377294848", img:I["proposito"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"De Mejorar a Crecer — Clau", fecha:"Mar 5, 2026", m1:803, m2:19, m3:"3.2%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7435426956981981185", img:I["mejorar"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"No puedes hacerlo todo — Mafe", fecha:"Feb 17, 2026", m1:926, m2:38, m3:"6.9%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7429588830732574722", img:I["no-puedes"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"Liderar con intención — Clau", fecha:"Jan 29, 2026", m1:1264, m2:77, m3:"8.2%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7422656090707845120", img:I["liderar"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"De demostrar a compartir — Clau", fecha:"Dec 16, 2025", m1:695, m2:26, m3:"7.3%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7406749552281812992", img:I["demostrar"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"Atreviéndonos a usar nuestra voz — Clau y Mafe", fecha:"Dec 4, 2025", m1:849, m2:259, m3:"31.8%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7402477701980135424", img:I["atreviendonos"], tag:"pli", plat:"LinkedIn Propel" },
+    { titulo:"¡Lanzamos Impulso!", fecha:"Dec 2, 2025", m1:783, m2:207, m3:"29.6%", l1:"Imp.", l2:"Clics", l3:"Inter.", url:"https://www.linkedin.com/feed/update/urn:li:activity:7401658863223087106", img:I["lanzamiento"], tag:"pli", plat:"LinkedIn Propel" },
   ],
   ig: [
-    { titulo:"No cedas quién eres por un sí — Mafe", fecha:"May 28, 2026", viz:935, alcance:354, likes:23, guardados:6, url:"https://www.instagram.com/p/DY43Q5BDg0I/", img:I["no-cedas"] },
-    { titulo:"De asumir a preguntar — Clau", fecha:"May 7, 2026", viz:895, alcance:363, likes:18, guardados:1, url:"https://www.instagram.com/p/DYCr3mAjnIs/", img:I["asumir"] },
-    { titulo:"Deja de correr atrás de la IA — Mafe", fecha:"Apr 23, 2026", viz:997, alcance:454, likes:19, guardados:2, url:"https://www.instagram.com/p/DXerO0LiMcr/", img:I["deja-ia"] },
-    { titulo:"El salto que nadie te dice cómo dar — Clau", fecha:"Apr 9, 2026", viz:702, alcance:321, likes:20, guardados:0, url:"https://www.instagram.com/p/DW6l2fUjkWR/", img:I["el-salto"] },
-    { titulo:"Cuando el propósito no es suficiente — Diego Ontaneda", fecha:"Mar 26, 2026", viz:658, alcance:335, likes:10, guardados:0, url:"https://www.instagram.com/p/DWWpGlxDlHM/", img:I["proposito"] },
-    { titulo:"De Mejorar a Crecer — Clau", fecha:"Mar 5, 2026", viz:855, alcance:342, likes:17, guardados:1, url:"https://www.instagram.com/p/DVhEeccjnYd/", img:I["mejorar"] },
-    { titulo:"No puedes hacerlo todo — Mafe", fecha:"Feb 17, 2026", viz:762, alcance:317, likes:20, guardados:0, url:"https://www.instagram.com/p/DU3luAvjkw6/", img:I["no-puedes"] },
-    { titulo:"Liderar con intención — Clau", fecha:"Jan 29, 2026", viz:968, alcance:367, likes:32, guardados:3, url:"https://www.instagram.com/p/DUGWvNQjhir/", img:I["liderar"] },
+    { titulo:"No cedas quién eres por un sí — Mafe", fecha:"May 28, 2026", m1:354, m2:23, m3:6, l1:"Alcance", l2:"Likes", l3:"Guard.", url:"https://www.instagram.com/p/DY43Q5BDg0I/", img:I["no-cedas"], tag:"pig", plat:"Instagram" },
+    { titulo:"De asumir a preguntar — Clau", fecha:"May 7, 2026", m1:363, m2:18, m3:1, l1:"Alcance", l2:"Likes", l3:"Guard.", url:"https://www.instagram.com/p/DYCr3mAjnIs/", img:I["asumir"], tag:"pig", plat:"Instagram" },
+    { titulo:"Deja de correr atrás de la IA — Mafe", fecha:"Apr 23, 2026", m1:454, m2:19, m3:2, l1:"Alcance", l2:"Likes", l3:"Guard.", url:"https://www.instagram.com/p/DXerO0LiMcr/", img:I["deja-ia"], tag:"pig", plat:"Instagram" },
+    { titulo:"El salto que nadie te dice cómo dar — Clau", fecha:"Apr 9, 2026", m1:321, m2:20, m3:0, l1:"Alcance", l2:"Likes", l3:"Guard.", url:"https://www.instagram.com/p/DW6l2fUjkWR/", img:I["el-salto"], tag:"pig", plat:"Instagram" },
+    { titulo:"Cuando el propósito no es suficiente — Diego", fecha:"Mar 26, 2026", m1:335, m2:10, m3:0, l1:"Alcance", l2:"Likes", l3:"Guard.", url:"https://www.instagram.com/p/DWWpGlxDlHM/", img:I["proposito"], tag:"pig", plat:"Instagram" },
+    { titulo:"De Mejorar a Crecer — Clau", fecha:"Mar 5, 2026", m1:342, m2:17, m3:1, l1:"Alcance", l2:"Likes", l3:"Guard.", url:"https://www.instagram.com/p/DVhEeccjnYd/", img:I["mejorar"], tag:"pig", plat:"Instagram" },
+    { titulo:"No puedes hacerlo todo — Mafe", fecha:"Feb 17, 2026", m1:317, m2:20, m3:0, l1:"Alcance", l2:"Likes", l3:"Guard.", url:"https://www.instagram.com/p/DU3luAvjkw6/", img:I["no-puedes"], tag:"pig", plat:"Instagram" },
+    { titulo:"Liderar con intención — Clau", fecha:"Jan 29, 2026", m1:367, m2:32, m3:3, l1:"Alcance", l2:"Likes", l3:"Guard.", url:"https://www.instagram.com/p/DUGWvNQjhir/", img:I["liderar"], tag:"pig", plat:"Instagram" },
   ],
   clau: [
-    { titulo:"Lanzamos Impulso", fecha:"Dec 2, 2025", likes:178, com:34, comp:1, total:213, url:"https://www.linkedin.com/posts/claudia-belmont_hoy-dimos-un-paso-importante-en-propel-mafe-activity-7401752624506851328-9Oem", img:I["lanzamiento"] },
-    { titulo:"De Demostrar a Compartir", fecha:"Dec 16, 2025", likes:183, com:26, comp:1, total:210, url:"https://www.linkedin.com/posts/claudia-belmont_durante-mucho-tiempo-sent%C3%AD-que-ten%C3%ADa-que-activity-7406746151347195904-CgB6", img:I["demostrar"] },
-    { titulo:"Lidera con intención", fecha:"Jan 29, 2026", likes:106, com:17, comp:1, total:124, url:"https://www.linkedin.com/posts/claudia-belmont_liderar-con-intenci%C3%B3n-activity-7422729440461500416-Ffal", img:I["liderar"] },
-    { titulo:"De Mejorar a Crecer", fecha:"Mar 5, 2026", likes:63, com:7, comp:2, total:72, url:"https://www.linkedin.com/posts/claudia-belmont_hace-poco-terminamos-nuestro-proceso-de-feedback-activity-7435427913933557760-P3vY", img:I["mejorar"] },
-    { titulo:"El salto que nadie te dice cómo dar", fecha:"Apr 9, 2026", likes:72, com:3, comp:1, total:76, url:"https://www.linkedin.com/posts/claudia-belmont_hay-un-momento-que-seguro-has-vivido-la-activity-7448030257418272768-8odC", img:I["el-salto"] },
-    { titulo:"De asumir a preguntar", fecha:"May 7, 2026", likes:43, com:9, comp:0, total:52, url:"https://www.linkedin.com/posts/claudia-belmont_lo-que-no-se-dice-se-acumula-empieza-cuando-activity-7458178388550406144--O1M", img:I["asumir"] },
+    { titulo:"Lanzamos Impulso", fecha:"Dec 2, 2025", m1:178, m2:34, m3:213, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/claudia-belmont_hoy-dimos-un-paso-importante-en-propel-mafe-activity-7401752624506851328-9Oem", img:I["lanzamiento"], tag:"pli", plat:"Clau LinkedIn" },
+    { titulo:"De Demostrar a Compartir", fecha:"Dec 16, 2025", m1:183, m2:26, m3:210, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/claudia-belmont_durante-mucho-tiempo-sent%C3%AD-que-ten%C3%ADa-que-activity-7406746151347195904-CgB6", img:I["demostrar"], tag:"pli", plat:"Clau LinkedIn" },
+    { titulo:"Lidera con intención", fecha:"Jan 29, 2026", m1:106, m2:17, m3:124, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/claudia-belmont_liderar-con-intenci%C3%B3n-activity-7422729440461500416-Ffal", img:I["liderar"], tag:"pli", plat:"Clau LinkedIn" },
+    { titulo:"De Mejorar a Crecer", fecha:"Mar 5, 2026", m1:63, m2:7, m3:72, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/claudia-belmont_hace-poco-terminamos-nuestro-proceso-de-feedback-activity-7435427913933557760-P3vY", img:I["mejorar"], tag:"pli", plat:"Clau LinkedIn" },
+    { titulo:"El salto que nadie te dice cómo dar", fecha:"Apr 9, 2026", m1:72, m2:3, m3:76, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/claudia-belmont_hay-un-momento-que-seguro-has-vivido-la-activity-7448030257418272768-8odC", img:I["el-salto"], tag:"pli", plat:"Clau LinkedIn" },
+    { titulo:"De asumir a preguntar", fecha:"May 7, 2026", m1:43, m2:9, m3:52, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/claudia-belmont_lo-que-no-se-dice-se-acumula-empieza-cuando-activity-7458178388550406144--O1M", img:I["asumir"], tag:"pli", plat:"Clau LinkedIn" },
   ],
   mafe: [
-    { titulo:"Lanzamos Impulso", fecha:"Dec 2, 2025", likes:101, com:13, comp:1, total:115, url:"https://www.linkedin.com/posts/mariafernandasierraperea_hoy-lanzamos-impulso-un-espacio-que-clau-activity-7401756079619088384-p8wj", img:I["lanzamiento"] },
-    { titulo:"Permitiéndonos soñar en 2026", fecha:"Jan 15, 2026", likes:43, com:8, comp:3, total:54, url:"https://www.linkedin.com/posts/mariafernandasierraperea_como-l%C3%ADderes-sociales-dejamos-de-so%C3%B1ar-activity-7417650200258863104-JLso", img:I["permitiendonos"] },
-    { titulo:"No puedes hacerlo todo", fecha:"Feb 17, 2026", likes:112, com:28, comp:3, total:143, url:"https://www.linkedin.com/posts/mariafernandasierraperea_carrusel-no-puedes-hacerlo-todo-activity-7429922949056569344-G3MR", img:I["no-puedes"] },
-    { titulo:"Deja de correr atrás de la IA", fecha:"Apr 23, 2026", likes:29, com:5, comp:1, total:35, url:"https://www.linkedin.com/posts/mariafernandasierraperea_una-conversaci%C3%B3n-con-la-ia-puede-cambiar-activity-7453136510532644865-6nGg", img:I["deja-ia"] },
-    { titulo:"No cedas quién eres por un sí", fecha:"May 28, 2026", likes:26, com:4, comp:3, total:33, url:"https://www.linkedin.com/posts/mariafernandasierraperea_impulso-claridad-activity-7466178273534771200-nT09", img:I["no-cedas"] },
+    { titulo:"Lanzamos Impulso", fecha:"Dec 2, 2025", m1:101, m2:13, m3:115, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/mariafernandasierraperea_hoy-lanzamos-impulso-un-espacio-que-clau-activity-7401756079619088384-p8wj", img:I["lanzamiento"], tag:"pli", plat:"Mafe LinkedIn" },
+    { titulo:"Permitiéndonos soñar en 2026", fecha:"Jan 15, 2026", m1:43, m2:8, m3:54, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/mariafernandasierraperea_como-l%C3%ADderes-sociales-dejamos-de-so%C3%B1ar-activity-7417650200258863104-JLso", img:I["permitiendonos"], tag:"pli", plat:"Mafe LinkedIn" },
+    { titulo:"No puedes hacerlo todo", fecha:"Feb 17, 2026", m1:112, m2:28, m3:143, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/mariafernandasierraperea_carrusel-no-puedes-hacerlo-todo-activity-7429922949056569344-G3MR", img:I["no-puedes"], tag:"pli", plat:"Mafe LinkedIn" },
+    { titulo:"Deja de correr atrás de la IA", fecha:"Apr 23, 2026", m1:29, m2:5, m3:35, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/mariafernandasierraperea_una-conversaci%C3%B3n-con-la-ia-puede-cambiar-activity-7453136510532644865-6nGg", img:I["deja-ia"], tag:"pli", plat:"Mafe LinkedIn" },
+    { titulo:"No cedas quién eres por un sí", fecha:"May 28, 2026", m1:26, m2:4, m3:33, l1:"Likes", l2:"Com.", l3:"Total", url:"https://www.linkedin.com/posts/mariafernandasierraperea_impulso-claridad-activity-7466178273534771200-nT09", img:I["no-cedas"], tag:"pli", plat:"Mafe LinkedIn" },
   ]
 };
 
-function img(src, alt) { return '<img src="'+src+'" alt="'+alt+'" onerror="this.outerHTML=\'<div class=fallback>'+alt+'</div>\'">'; }
-function cardLI(p) { return '<div class="card"><div class="card-img">'+img(p.img,p.titulo)+'<span class="ptag pli">LinkedIn Propel</span></div><div class="card-body"><div class="card-title">'+p.titulo+'</div><div class="card-date">'+p.fecha+'</div><div class="metrics"><div class="met"><div class="met-val">'+p.imp.toLocaleString()+'</div><div class="met-lbl">Imp.</div></div><div class="met"><div class="met-val">'+p.clics+'</div><div class="met-lbl">Clics</div></div><div class="met"><div class="met-val">'+p.tasa+'%</div><div class="met-lbl">Inter.</div></div></div><a href="'+p.url+'" target="_blank" class="card-link">Ver post →</a></div></div>'; }
-function cardIG(p) { return '<div class="card"><div class="card-img">'+img(p.img,p.titulo)+'<span class="ptag pig">Instagram</span></div><div class="card-body"><div class="card-title">'+p.titulo+'</div><div class="card-date">'+p.fecha+'</div><div class="metrics"><div class="met"><div class="met-val">'+p.alcance+'</div><div class="met-lbl">Alcance</div></div><div class="met"><div class="met-val">'+p.likes+'</div><div class="met-lbl">Likes</div></div><div class="met"><div class="met-val">'+p.guardados+'</div><div class="met-lbl">Guard.</div></div></div><a href="'+p.url+'" target="_blank" class="card-link">Ver post →</a></div></div>'; }
-function cardP(p,label,cls) { return '<div class="card"><div class="card-img">'+img(p.img,p.titulo)+'<span class="ptag '+cls+'">'+label+'</span></div><div class="card-body"><div class="card-title">'+p.titulo+'</div><div class="card-date">'+p.fecha+'</div><div class="metrics"><div class="met"><div class="met-val">'+p.likes+'</div><div class="met-lbl">Likes</div></div><div class="met"><div class="met-val">'+p.com+'</div><div class="met-lbl">Com.</div></div><div class="met"><div class="met-val">'+p.total+'</div><div class="met-lbl">Total</div></div></div><a href="'+p.url+'" target="_blank" class="card-link">Ver post →</a></div></div>'; }
-function kpi(label,val) { return '<div class="kpi"><div class="kpi-val">'+val+'</div><div class="kpi-label">'+label+'</div></div>'; }
+function row(p) {
+  return `<div class="post-row">
+    <img class="post-thumb" src="${p.img}" alt="${p.titulo}" onerror="this.style.background='#ffe8d6'">
+    <div class="post-info">
+      <div class="post-title">${p.titulo}</div>
+      <div class="post-meta">
+        <span class="post-date">${p.fecha}</span>
+        <span class="ptag ${p.tag}">${p.plat}</span>
+      </div>
+    </div>
+    <div class="post-metrics">
+      <div class="metric"><div class="metric-val">${typeof p.m1==='number'?p.m1.toLocaleString():p.m1}</div><div class="metric-lbl">${p.l1}</div></div>
+      <div class="metric"><div class="metric-val">${p.m2}</div><div class="metric-lbl">${p.l2}</div></div>
+      <div class="metric"><div class="metric-val">${p.m3}</div><div class="metric-lbl">${p.l3}</div></div>
+      <a href="${p.url}" target="_blank" class="post-link">Ver →</a>
+    </div>
+  </div>`;
+}
 
-function render(gId,sId,html,sum) { document.getElementById(gId).innerHTML=html; document.getElementById(sId).innerHTML=sum; }
+function kpi(label,val) { return `<div class="kpi"><div class="kpi-val">${val}</div><div class="kpi-lbl">${label}</div></div>`; }
 
-render('grid-li','sum-li', posts.li.map(cardLI).join(''),
-  kpi('Posts',posts.li.length)+kpi('Impresiones',posts.li.reduce((a,p)=>a+p.imp,0).toLocaleString())+kpi('Clics',posts.li.reduce((a,p)=>a+p.clics,0))+kpi('% Inter. prom.',(posts.li.reduce((a,p)=>a+p.tasa,0)/posts.li.length).toFixed(1)+'%'));
-render('grid-ig','sum-ig', posts.ig.map(cardIG).join(''),
-  kpi('Posts',posts.ig.length)+kpi('Alcance',posts.ig.reduce((a,p)=>a+p.alcance,0).toLocaleString())+kpi('Likes',posts.ig.reduce((a,p)=>a+p.likes,0))+kpi('Guardados',posts.ig.reduce((a,p)=>a+p.guardados,0)));
-render('grid-clau','sum-clau', posts.clau.map(p=>cardP(p,'Clau LinkedIn','pli')).join(''),
-  kpi('Posts',posts.clau.length)+kpi('Interacciones',posts.clau.reduce((a,p)=>a+p.total,0))+kpi('Top post','Lanzamos Impulso'));
-render('grid-mafe','sum-mafe', posts.mafe.map(p=>cardP(p,'Mafe LinkedIn','pli')).join(''),
-  kpi('Posts',posts.mafe.length)+kpi('Interacciones',posts.mafe.reduce((a,p)=>a+p.total,0))+kpi('Top post','No puedes hacerlo todo'));
-const all=[...posts.li.map(cardLI),...posts.ig.map(cardIG),...posts.clau.map(p=>cardP(p,'Clau LinkedIn','pli')),...posts.mafe.map(p=>cardP(p,'Mafe LinkedIn','pli'))];
-render('grid-todos','sum-todos', all.join(''),
-  kpi('Posts totales',posts.li.length+posts.ig.length+posts.clau.length+posts.mafe.length)+kpi('Plataformas',3)+kpi('Mejor LI','Liderar con intención')+kpi('Mejor IG','No cedas quién eres'));
+function render(gId,sId,data,sumHtml) {
+  document.getElementById(gId).innerHTML = data.map(row).join('');
+  document.getElementById(sId).innerHTML = sumHtml;
+}
+
+render('grid-li','sum-li', posts.li,
+  kpi('Posts',posts.li.length)+kpi('Impresiones',posts.li.reduce((a,p)=>a+p.m1,0).toLocaleString())+kpi('Clics',posts.li.reduce((a,p)=>a+p.m2,0))+kpi('% Inter. prom.',(posts.li.reduce((a,p)=>a+parseFloat(p.m3),0)/posts.li.length).toFixed(1)+'%'));
+render('grid-ig','sum-ig', posts.ig,
+  kpi('Posts',posts.ig.length)+kpi('Alcance total',posts.ig.reduce((a,p)=>a+p.m1,0).toLocaleString())+kpi('Likes',posts.ig.reduce((a,p)=>a+p.m2,0))+kpi('Guardados',posts.ig.reduce((a,p)=>a+p.m3,0)));
+render('grid-clau','sum-clau', posts.clau,
+  kpi('Posts',posts.clau.length)+kpi('Interacciones',posts.clau.reduce((a,p)=>a+p.m3,0))+kpi('Top post','Lanzamos Impulso'));
+render('grid-mafe','sum-mafe', posts.mafe,
+  kpi('Posts',posts.mafe.length)+kpi('Interacciones',posts.mafe.reduce((a,p)=>a+p.m3,0))+kpi('Top post','No puedes hacerlo todo'));
+
+// Resumen: solo posts únicos (sin duplicados entre plataformas)
+const uniqueTitles = new Set();
+const uniquePosts = [...posts.li,...posts.ig,...posts.clau,...posts.mafe].filter(p => {
+  const key = p.titulo.split('—')[0].trim().toLowerCase();
+  if(uniqueTitles.has(key)) return false;
+  uniqueTitles.add(key); return true;
+});
+render('grid-todos','sum-todos', uniquePosts,
+  kpi('Blogs publicados',uniquePosts.length)+kpi('Plataformas',3)+kpi('Mejor LI Propel','Liderar con intención')+kpi('Mejor Instagram','Deja de correr atrás de la IA'));
 
 function showTab(id,el) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
