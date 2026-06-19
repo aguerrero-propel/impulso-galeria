@@ -3,25 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Impulso — Galería de Posts</title>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Impulso — Dashboard Q2 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { --naranja: #ff7903; --borde: #ebebeb; --gris: #f7f7f5; }
+  :root {
+    --naranja: #ff7903;
+    --rojo: #E84B2A;
+    --borde: #ebebeb;
+    --gris: #f7f7f5;
+    --verde: #2E7D32;
+    --verde-bg: #E8F5E9;
+    --amarillo: #B45309;
+    --amarillo-bg: #FFFBEB;
+    --texto: #1a1a1a;
+    --texto-suave: #888;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Libre Franklin', sans-serif; background: #fff; color: #1a1a1a; }
+  body { font-family: 'Libre Franklin', sans-serif; background: #fff; color: var(--texto); }
+
+  /* HEADER */
   header { background: var(--naranja); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
   header h1 { color: #fff; font-size: 15px; font-weight: 300; }
   header span { color: rgba(255,255,255,0.75); font-size: 11px; font-weight: 300; }
+
+  /* TABS */
   .tabs { display: flex; overflow-x: auto; padding: 0 20px; border-bottom: 1px solid var(--borde); background: #fff; position: sticky; top: 0; z-index: 10; }
   .tabs::-webkit-scrollbar { display: none; }
   .tab { padding: 11px 14px; font-size: 11px; font-weight: 500; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0; }
   .tab.active { color: var(--naranja); border-bottom-color: var(--naranja); }
+
+  /* PAGES */
   .section { display: none; padding: 16px 20px; max-width: 1000px; margin: 0 auto; }
   .section.active { display: block; }
+
+  /* ── GALERÍA (estilo original) ────────────────── */
   .summary { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
   .kpi { background: var(--gris); border-radius: 8px; padding: 10px 14px; }
   .kpi-val { font-size: 17px; font-weight: 300; color: var(--naranja); line-height: 1; }
-  .kpi-lbl { font-size: 10px; color: #888; margin-top: 3px; }
+  .kpi-lbl { font-size: 10px; color: var(--texto-suave); margin-top: 3px; }
   .sec-label { font-size: 10px; font-weight: 500; color: var(--naranja); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 220px)); gap: 12px; justify-content: start; }
   @media (max-width: 700px) { .grid { grid-template-columns: repeat(3, 1fr); } }
@@ -31,34 +50,215 @@
   .ptag { position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
   .ptag svg { width: 14px; height: 14px; fill: rgba(255,255,255,0.9); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4)); }
   .card-body { padding: 6px 8px; }
-  .card-title { font-size: 9px; font-weight: 400; color: #1a1a1a; line-height: 1.4; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-title { font-size: 9px; font-weight: 400; color: var(--texto); line-height: 1.4; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .card-date { font-size: 9px; color: #bbb; margin-bottom: 5px; }
   .card-metrics { display: flex; gap: 0; border-top: 1px solid var(--borde); padding-top: 5px; margin-top: 3px; }
   .met { flex: 1; text-align: center; }
   .met + .met { border-left: 1px solid var(--borde); }
   .met-val { font-size: 11px; font-weight: 300; color: var(--naranja); }
   .met-lbl { font-size: 8px; color: #bbb; text-transform: uppercase; margin-top: 1px; }
-  .card-insight { font-size: 9px; color: #888; font-style: italic; padding: 5px 8px; border-top: 1px solid var(--borde); line-height: 1.4; }
-  .card-insight span { color: var(--naranja); }
+  .card-insight { font-size: 9px; color: var(--texto-suave); font-style: italic; padding: 5px 8px; border-top: 1px solid var(--borde); line-height: 1.4; }
   .card-link { display: block; text-align: center; font-size: 9px; font-weight: 500; color: var(--naranja); text-decoration: none; padding: 5px; border-top: 1px solid var(--borde); margin-top: 5px; }
   .card-link:hover { background: #fff8f3; }
+
+  /* ── MÉTRICAS + ESTRATEGIAS ───────────────────── */
+
+  /* Progress */
+  .progress-wrap { background: var(--gris); border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; }
+  .progress-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .progress-label { font-size: 10px; font-weight: 600; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.5px; }
+  .progress-nums { font-size: 11px; font-weight: 500; color: var(--texto); }
+  .progress-bar-bg { background: #ddd; border-radius: 6px; height: 10px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 6px; background: var(--naranja); width: 71.7%; }
+  .progress-foot { display: flex; justify-content: space-between; margin-top: 5px; }
+  .progress-foot span { font-size: 9px; color: #bbb; }
+
+  /* Section titles */
+  .sec-title { font-size: 10px; font-weight: 600; color: var(--naranja); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 10px; }
+
+  /* Bar charts */
+  .chart-box { background: var(--gris); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+  .chart-box h4 { font-size: 10px; font-weight: 600; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-lbl { font-size: 10px; color: var(--texto); width: 130px; flex-shrink: 0; }
+  .bar-track { flex: 1; background: #ddd; border-radius: 3px; height: 14px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; background: var(--naranja); }
+  .bar-fill.sec { background: #FFBF86; }
+  .bar-fill.red { background: var(--rojo); }
+  .bar-num { font-size: 10px; font-weight: 600; color: var(--texto); width: 44px; text-align: right; flex-shrink: 0; }
+
+  /* A/B test */
+  .ab-box { background: var(--gris); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+  .ab-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .ab-title { font-size: 11px; font-weight: 600; color: var(--texto); }
+  .ab-sub { font-size: 9px; color: var(--texto-suave); margin-top: 2px; }
+  .ab-tag { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; background: #fff3e6; color: var(--naranja); padding: 2px 7px; border-radius: 4px; flex-shrink: 0; }
+  .ab-winner-box { background: #fff3e6; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px; font-size: 10px; color: var(--texto); line-height: 1.5; }
+  .ab-winner-box strong { color: var(--naranja); font-weight: 700; }
+  .ab-variants-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+  @media (max-width: 700px) { .ab-variants-grid { grid-template-columns: repeat(2, 1fr); } }
+  .ab-var { background: #fff; border-radius: 6px; border: 1px solid var(--borde); padding: 10px; }
+  .ab-var.winner-var { border-color: var(--naranja); background: #fff8f3; }
+  .ab-var-label { font-size: 9px; font-weight: 700; color: var(--texto-suave); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .ab-var-subject { font-size: 9px; color: var(--texto); margin-bottom: 2px; font-weight: 500; }
+  .ab-var-from { font-size: 9px; color: #aaa; margin-bottom: 8px; }
+  .ab-var-stat { font-size: 18px; font-weight: 300; color: var(--naranja); }
+  .ab-var-stat small { font-size: 9px; color: var(--texto-suave); }
+  .ab-insight { background: var(--amarillo-bg); border-radius: 6px; padding: 8px 10px; font-size: 9px; color: var(--amarillo); font-weight: 500; line-height: 1.5; }
+
+  /* Strategy cards */
+  .strategy-head { background: var(--naranja); border-radius: 8px; padding: 16px 18px; margin-bottom: 16px; }
+  .strategy-head h2 { color: #fff; font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .strategy-head p { color: rgba(255,255,255,0.8); font-size: 10px; }
+  .strategy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  @media (max-width: 600px) { .strategy-grid { grid-template-columns: 1fr; } }
+  .strategy-card { background: var(--gris); border-radius: 8px; padding: 14px; }
+  .strategy-num { font-size: 9px; font-weight: 700; color: var(--naranja); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .strategy-card h3 { font-size: 12px; font-weight: 600; color: var(--texto); margin-bottom: 8px; }
+  .strategy-card p { font-size: 10px; color: var(--texto-suave); line-height: 1.5; margin-bottom: 8px; }
+  .action-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .action-list li { font-size: 10px; color: var(--texto); display: flex; align-items: flex-start; gap: 6px; line-height: 1.4; }
+  .action-list li .dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; margin-top: 2px; }
+  .action-list li.done .dot { background: var(--verde); }
+  .action-list li.skip { color: #bbb; }
+  .action-list li.skip .dot { background: #ddd; }
+
+  /* Insight list (KISS) */
+  .insight-group-title { font-size: 9px; font-weight: 700; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.8px; margin: 18px 0 8px; }
+  .insight-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 4px; }
+  @media (max-width: 600px) { .insight-list { grid-template-columns: 1fr; } }
+  .ins { background: var(--gris); border-radius: 8px; border-left: 3px solid var(--naranja); padding: 10px 14px; }
+  .ins-num { display: block; font-size: 11px; font-weight: 700; color: var(--naranja); line-height: 1; margin-bottom: 5px; }
+  .ins-text { display: block; font-size: 10px; color: var(--texto); line-height: 1.5; }
+
+  /* Q3 recommendations */
+  .q3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  @media (max-width: 700px) { .q3-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .q3-grid { grid-template-columns: 1fr; } }
+  .q3-card { background: var(--gris); border-radius: 8px; padding: 14px; }
+  .q3-num { font-size: 9px; font-weight: 700; color: var(--naranja); letter-spacing: 1px; margin-bottom: 5px; }
+  .q3-title { font-size: 11px; font-weight: 600; color: var(--texto); margin-bottom: 6px; line-height: 1.3; }
+  .q3-body { font-size: 10px; color: var(--texto-suave); line-height: 1.5; }
 </style>
 </head>
 <body>
+
 <header>
-  <h1>Impulso — Galería de Posts</h1>
-  <span>Rendimiento por plataforma</span>
+  <h1>Impulso — Dashboard Q2 2026</h1>
+  <span>Actualizado 18 Jun 2026</span>
 </header>
+
 <div class="tabs">
-  <div class="tab active" onclick="showTab('li-propel',this)">LinkedIn Propel</div>
-  <div class="tab" onclick="showTab('instagram',this)">Instagram</div>
-  <div class="tab" onclick="showTab('claudia',this)">Clau LinkedIn</div>
-  <div class="tab" onclick="showTab('mafe',this)">Mafe LinkedIn</div>
+  <div class="tab active"  onclick="showTab('metricas',this)">Métricas Q2</div>
+  <div class="tab"         onclick="showTab('li-propel',this)">LinkedIn Propel</div>
+  <div class="tab"         onclick="showTab('instagram',this)">Instagram</div>
+  <div class="tab"         onclick="showTab('claudia',this)">Clau LinkedIn</div>
+  <div class="tab"         onclick="showTab('mafe',this)">Mafe LinkedIn</div>
 </div>
-<div id="li-propel" class="section active"><div class="summary" id="sum-li"></div><div class="sec-label">LinkedIn Propel</div><div class="grid" id="grid-li"></div></div>
+
+
+<!-- ───── MÉTRICAS + ESTRATEGIAS ───── -->
+<div id="metricas" class="section active">
+
+  <!-- ESTRATEGIAS Q2 -->
+  <div class="sec-title">Estrategias ejecutadas en Q2</div>
+  <div class="strategy-grid">
+    <div class="strategy-card">
+      <div class="strategy-num">Estrategia 1</div>
+      <h3>Hacer fácil</h3>
+      <ul class="action-list">
+        <li class="done"><span class="dot"></span>Botón personalizado Clau LinkedIn</li>
+        <li class="done"><span class="dot"></span>Botón personalizado Mafe LinkedIn</li>
+        <li class="done"><span class="dot"></span>Landing page optimizado</li>
+        <li class="skip"><span class="dot"></span>CTA en 2–3 momentos del blog</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <div class="strategy-num">Estrategia 2</div>
+      <h3>Hacer concreto</h3>
+      <ul class="action-list">
+        <li class="done"><span class="dot"></span>Notes en Substack</li>
+        <li class="skip"><span class="dot"></span>Posts carrusel nuevos</li>
+        <li class="skip"><span class="dot"></span>Formatos visuales experimentales</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <div class="strategy-num">Estrategia 3</div>
+      <h3>Hacer visible</h3>
+      <ul class="action-list">
+        <li class="done"><span class="dot"></span>Pauta pagada Meta ads</li>
+        <li class="done"><span class="dot"></span>A/B test correos Propel Newsletter</li>
+        <li class="skip"><span class="dot"></span>Colaboraciones externas</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="sec-title">Aprendizajes del Q2</div>
+
+  <div class="insight-group-title">Crecimiento</div>
+  <div class="insight-list">
+    <div class="ins"><span class="ins-num">La pauta es el motor</span><span class="ins-text">Sin pauta Meta, el crecimiento es casi plano. Con ella, el ritmo se multiplica por 25. No es opcional.</span></div>
+    <div class="ins"><span class="ins-num">Clau amplifica más</span><span class="ins-text">El perfil personal de Clau genera más alcance y clics que el perfil de Propel. Es el canal orgánico más potente.</span></div>
+  </div>
+
+  <div class="insight-group-title">Contenido</div>
+  <div class="insight-list">
+    <div class="ins"><span class="ins-num">Lo personal conecta</span><span class="ins-text">Los posts con historia propia tienen el doble de engagement que los informativos. El formato que más funciona es Clau hablando desde su experiencia.</span></div>
+    <div class="ins"><span class="ins-num">Substack Notes funciona</span><span class="ins-text">Con muy poco esfuerzo, una nota semanal genera suscriptores orgánicos consistentes. Es el canal de menor fricción.</span></div>
+  </div>
+
+  <div class="insight-group-title">Correos</div>
+  <div class="insight-list">
+    <div class="ins"><span class="ins-num">El remitente importa más que el asunto</span><span class="ins-text">Enviar como "Claudia Belmont" sube el open rate 13 puntos vs. enviar como "Propel". La gente abre emails de personas, no de marcas.</span></div>
+    <div class="ins"><span class="ins-num">El asunto debe generar curiosidad, no pedir acción</span><span class="ins-text">"Lo que aprendemos liderando Propel" superó a "Únete a Impulso". Hablar de lo que das, no de lo que pides.</span></div>
+  </div>
+
+  <!-- RECOMENDACIONES Q3 -->
+  <div class="sec-title" style="margin-top:28px;">Recomendaciones para Q3</div>
+  <div class="q3-grid">
+    <div class="q3-card">
+      <div class="q3-num">01</div>
+      <div class="q3-title">Mantener la pauta encendida</div>
+      <div class="q3-body">Es el único canal que escala suscriptores de forma predecible. Probar creativos nuevos con el tono personal de Clau.</div>
+    </div>
+    <div class="q3-card">
+      <div class="q3-num">02</div>
+      <div class="q3-title">1 Substack Note por semana</div>
+      <div class="q3-body">Extracto de blog + pregunta directa. Bajo esfuerzo, conversión orgánica constante.</div>
+    </div>
+    <div class="q3-card">
+      <div class="q3-num">03</div>
+      <div class="q3-title">Publicar primero desde el LinkedIn de Clau</div>
+      <div class="q3-body">Cada blog debe salir primero desde su perfil personal. Es donde la audiencia ya está y responde.</div>
+    </div>
+    <div class="q3-card">
+      <div class="q3-num">04</div>
+      <div class="q3-title">Crear secuencia de bienvenida</div>
+      <div class="q3-body">El open rate baja cuando la base crece por pauta. Un email que presente Impulso y muestre los mejores posts recupera el engagement.</div>
+    </div>
+    <div class="q3-card">
+      <div class="q3-num">05</div>
+      <div class="q3-title">Enviar siempre como Claudia Belmont</div>
+      <div class="q3-body">En todos los correos de Impulso al Propel Newsletter. Usar nombre personal como remitente. El Q2 lo demostró con datos.</div>
+    </div>
+    <div class="q3-card">
+      <div class="q3-num">06</div>
+      <div class="q3-title">Activar colaboraciones</div>
+      <div class="q3-body">Fue la única estrategia que no se ejecutó en Q2. Un post invitado de un Fellow con audiencia propia puede traer subs nuevos sin pauta.</div>
+    </div>
+  </div>
+
+</div><!-- /metricas -->
+
+<!-- ───── GALERÍA ───── -->
+<div id="li-propel" class="section"><div class="summary" id="sum-li"></div><div class="sec-label">LinkedIn Propel</div><div class="grid" id="grid-li"></div></div>
 <div id="instagram" class="section"><div class="summary" id="sum-ig"></div><div class="sec-label">Instagram @wepropelorg</div><div class="grid" id="grid-ig"></div></div>
-<div id="claudia" class="section"><div class="summary" id="sum-clau"></div><div class="sec-label">Claudia Belmont — LinkedIn</div><div class="grid" id="grid-clau"></div></div>
-<div id="mafe" class="section"><div class="summary" id="sum-mafe"></div><div class="sec-label">María Fernanda Sierra — LinkedIn</div><div class="grid" id="grid-mafe"></div></div>
+<div id="claudia"   class="section"><div class="summary" id="sum-clau"></div><div class="sec-label">Claudia Belmont — LinkedIn</div><div class="grid" id="grid-clau"></div></div>
+<div id="mafe"      class="section"><div class="summary" id="sum-mafe"></div><div class="sec-label">María Fernanda Sierra — LinkedIn</div><div class="grid" id="grid-mafe"></div></div>
 
 <script>
 var LI_SVG = '<svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>';
@@ -77,7 +277,7 @@ var I = {
 
 var posts = {
   li: [
-    { titulo:"Piensas que no puedes. Hasta que puedes. — Clau", fecha:"Jun 11, 2026", m:[188,85,"46.8%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/posts/wepropel_piensas-que-no-puedes-hasta-que-puedes-activity-7470873960029732865-UW8t", img:I["piensas"], tag:"pli", insight:"Mejor tasa de interacción de todos los posts. Carrusel personal es tu formato ganador." },
+    { titulo:"Piensas que no puedes. Hasta que puedes. — Clau", fecha:"Jun 11, 2026", m:[259,112,"44.4%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/posts/wepropel_piensas-que-no-puedes-hasta-que-puedes-activity-7470873960029732865-UW8t", img:I["piensas"], tag:"pli", insight:"Mejor tasa de interacción de todos los posts. Carrusel personal es tu formato ganador." },
     { titulo:"No cedas quién eres por un sí — Mafe", fecha:"May 28, 2026", m:[673,233,"36.4%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7465811765855956992", img:I["no-cedas"], tag:"pli", insight:"Top post. Historia personal = mayor interacción." },
     { titulo:"De asumir a preguntar — Clau", fecha:"May 7, 2026", m:[392,7,"2.6%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7458172702303059969", img:I["asumir"], tag:"pli", insight:"Bajo CTR. Añade link en texto, no en comentarios." },
     { titulo:"Deja de correr atrás de la IA — Mafe", fecha:"Apr 23, 2026", m:[365,5,"3.8%"], l:["Imp.","Clics","Inter."], url:"https://www.linkedin.com/feed/update/urn:li:activity:7453105288108306432", img:I["deja-ia"], tag:"pli", insight:"Buen tema. Falta gancho personal al inicio." },
@@ -102,13 +302,13 @@ var posts = {
     { titulo:"Liderar con intención — Clau", fecha:"Jan 29, 2026", m:[367,32,3], l:["Alcance","Likes","Guard."], url:"https://www.instagram.com/p/DUGWvNQjhir/", img:I["liderar"], tag:"pig", insight:"Mayor alcance histórico. Foto grupal engancha más." }
   ],
   clau: [
-    { titulo:"Piensas que no puedes. Hasta que puedes.", fecha:"Jun 11, 2026", m:[143,32,175], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hubo-un-momento-en-que-dejar-belcorp-me-parec%C3%ADa-share-7470844952697217024-OrRD/", img:I["piensas"], tag:"pli", insight:"Tu post más reciente y con más clics. El salto personal resuena con tu audiencia." },
-    { titulo:"Lanzamos Impulso", fecha:"Dec 2, 2025", m:[178,34,213], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hoy-dimos-un-paso-importante-en-propel-mafe-activity-7401752624506851328-9Oem", img:I["lanzamiento"], tag:"pli", insight:"Tu post más viral. Primera persona genera 4x más engagement." },
+    { titulo:"Piensas que no puedes. Hasta que puedes.", fecha:"Jun 11, 2026", m:[183,40,224], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hubo-un-momento-en-que-dejar-belcorp-me-parec%C3%ADa-share-7470844952697217024-OrRD/", img:I["piensas"], tag:"pli", insight:"Tu post más reciente y con más interacciones del Q2. El salto personal resuena con tu audiencia." },
+    { titulo:"Lanzamos Impulso", fecha:"Dec 2, 2025", m:[194,34,229], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hoy-dimos-un-paso-importante-en-propel-mafe-activity-7401752624506851328-9Oem", img:I["lanzamiento"], tag:"pli", insight:"Tu post más viral. Primera persona genera 4x más engagement." },
     { titulo:"De Demostrar a Compartir", fecha:"Dec 16, 2025", m:[183,26,210], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_durante-mucho-tiempo-sent%C3%AD-que-ten%C3%ADa-que-activity-7406746151347195904-CgB6", img:I["demostrar"], tag:"pli", insight:"Alta interacción. La vulnerabilidad convierte mejor que los logros." },
     { titulo:"Lidera con intención", fecha:"Jan 29, 2026", m:[106,17,124], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_liderar-con-intenci%C3%B3n-activity-7422729440461500416-Ffal", img:I["liderar"], tag:"pli", insight:"Buen engagement. Las preguntas al final duplican comentarios." },
-    { titulo:"De Mejorar a Crecer", fecha:"Mar 5, 2026", m:[63,7,72], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hace-poco-terminamos-nuestro-proceso-de-feedback-activity-7435427913933557760-P3vY", img:I["mejorar"], tag:"pli", insight:"Bajo engagement. Agrega CTA más directo al final." },
     { titulo:"El salto que nadie te dice cómo dar", fecha:"Apr 9, 2026", m:[72,3,76], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hay-un-momento-que-seguro-has-vivido-la-activity-7448030257418272768-8odC", img:I["el-salto"], tag:"pli", insight:"Sólido. Contexto propio supera contenido informativo." },
-    { titulo:"De asumir a preguntar", fecha:"May 7, 2026", m:[43,9,52], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_lo-que-no-se-dice-se-acumula-empieza-cuando-activity-7458178388550406144--O1M", img:I["asumir"], tag:"pli", insight:"Menor alcance. Inicia con la historia antes que la reflexión." }
+    { titulo:"De asumir a preguntar", fecha:"May 7, 2026", m:[43,9,52], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_lo-que-no-se-dice-se-acumula-empieza-cuando-activity-7458178388550406144--O1M", img:I["asumir"], tag:"pli", insight:"Menor alcance. Inicia con la historia antes que la reflexión." },
+    { titulo:"De Mejorar a Crecer", fecha:"Mar 5, 2026", m:[63,7,72], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/claudia-belmont_hace-poco-terminamos-nuestro-proceso-de-feedback-activity-7435427913933557760-P3vY", img:I["mejorar"], tag:"pli", insight:"Bajo engagement. Agrega CTA más directo al final." }
   ],
   mafe: [
     { titulo:"Lanzamos Impulso", fecha:"Dec 2, 2025", m:[101,13,115], l:["Likes","Com.","Total"], url:"https://www.linkedin.com/posts/mariafernandasierraperea_hoy-lanzamos-impulso-un-espacio-que-clau-activity-7401756079619088384-p8wj", img:I["lanzamiento"], tag:"pli", insight:"Top post. Narrativa de lanzamiento en dupla amplifica el alcance." },
@@ -152,13 +352,19 @@ function render(gId, sId, data, sumHtml) {
 }
 
 render('grid-li', 'sum-li', posts.li,
-  kpi('Posts', posts.li.length) + kpi('Impresiones', posts.li.reduce(function(a,p){return a+p.m[0];},0).toLocaleString()) + kpi('Clics', posts.li.reduce(function(a,p){return a+p.m[1];},0)));
+  kpi('Posts', posts.li.length) +
+  kpi('Impresiones', posts.li.reduce(function(a,p){return a+(typeof p.m[0]==='number'?p.m[0]:0);},0).toLocaleString()) +
+  kpi('Clics', posts.li.reduce(function(a,p){return a+(typeof p.m[1]==='number'?p.m[1]:0);},0)));
 render('grid-ig', 'sum-ig', posts.ig,
-  kpi('Posts', posts.ig.length) + kpi('Alcance', posts.ig.reduce(function(a,p){return a+p.m[0];},0).toLocaleString()) + kpi('Likes', posts.ig.reduce(function(a,p){return a+p.m[1];},0)));
+  kpi('Posts', posts.ig.length) +
+  kpi('Alcance', posts.ig.reduce(function(a,p){return a+p.m[0];},0).toLocaleString()) +
+  kpi('Likes', posts.ig.reduce(function(a,p){return a+p.m[1];},0)));
 render('grid-clau', 'sum-clau', posts.clau,
-  kpi('Posts', posts.clau.length) + kpi('Interacciones', posts.clau.reduce(function(a,p){return a+p.m[2];},0)));
+  kpi('Posts', posts.clau.length) +
+  kpi('Interacciones', posts.clau.reduce(function(a,p){return a+p.m[2];},0)));
 render('grid-mafe', 'sum-mafe', posts.mafe,
-  kpi('Posts', posts.mafe.length) + kpi('Interacciones', posts.mafe.reduce(function(a,p){return a+p.m[2];},0)));
+  kpi('Posts', posts.mafe.length) +
+  kpi('Interacciones', posts.mafe.reduce(function(a,p){return a+p.m[2];},0)));
 
 function showTab(id, el) {
   document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
