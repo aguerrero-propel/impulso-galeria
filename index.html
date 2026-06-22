@@ -142,13 +142,16 @@
   .q3-num { font-size: 9px; font-weight: 700; color: var(--naranja); letter-spacing: 1px; margin-bottom: 5px; }
   .q3-title { font-size: 11px; font-weight: 600; color: var(--texto); margin-bottom: 6px; line-height: 1.3; }
   .q3-body { font-size: 10px; color: var(--texto-suave); line-height: 1.5; }
+  /* Chart box */
+  .chart-box { background: var(--gris); border-radius: 8px; padding: 14px 16px; }
+  .chart-box h4 { font-size: 10px; font-weight: 600; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>Impulso — Dashboard Q2 2026</h1>
-  <span>Actualizado 18 Jun 2026</span>
+  <span id="lastUpdated">Cargando...</span>
 </header>
 
 <div class="tabs">
@@ -162,6 +165,24 @@
 
 <!-- ───── MÉTRICAS + ESTRATEGIAS ───── -->
 <div id="metricas" class="section active">
+
+  <!-- GRÁFICA SUSCRIPTORES -->
+  <div class="chart-box" style="margin-bottom:16px; position:relative;">
+    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;">
+      <h4 style="margin:0;">Crecimiento de suscriptores</h4>
+      <span id="subsCounter" style="font-size:11px; font-weight:600; color:var(--naranja);">809 / 1,000 — <span style="color:var(--texto-suave); font-weight:400;">faltan 191</span></span>
+    </div>
+    <canvas id="subsChart" style="width:100%; height:220px;"></canvas>
+    <div id="chartTooltip" style="
+      display:none; position:absolute; background:#fff; border:1px solid var(--borde);
+      border-radius:8px; padding:8px 12px; font-size:10px; pointer-events:none;
+      box-shadow:0 4px 14px rgba(0,0,0,0.1); max-width:200px; z-index:20;
+    ">
+      <div id="ttDate" style="font-weight:700; color:var(--texto); margin-bottom:3px;"></div>
+      <div id="ttSubs" style="color:var(--naranja); font-weight:600; margin-bottom:3px;"></div>
+      <div id="ttHito" style="color:var(--texto-suave); line-height:1.4;"></div>
+    </div>
+  </div>
 
   <!-- ESTRATEGIAS Q2 -->
   <div class="sec-title">Estrategias ejecutadas en Q2</div>
@@ -202,8 +223,7 @@
   <div class="insight-group-title">Crecimiento</div>
   <div class="insight-list">
     <div class="ins"><span class="ins-num">La pauta es el motor</span><span class="ins-text">Sin pauta Meta, el crecimiento es casi plano. Con ella, el ritmo se multiplica por 25. No es opcional.</span></div>
-    <div class="ins"><span class="ins-num">Clau amplifica más</span><span class="ins-text">El perfil personal de Clau genera más alcance y clics que el perfil de Propel. Es el canal orgánico más potente.</span></div>
-  </div>
+    <div class="ins"><span class="ins-num">Clau amplifica más</span><span class="ins-text">El perfil personal de Clau genera más alcance y clics que el perfil de Propel. Es el canal orgánico más potente.</span></div>  </div>
 
   <div class="insight-group-title">Contenido</div>
   <div class="insight-list">
@@ -372,6 +392,226 @@ function showTab(id, el) {
   document.getElementById(id).classList.add('active');
   el.classList.add('active');
 }
+
+// ── SUBSCRIBER GROWTH CHART — live from Google Sheets ───
+var subsData = []; // populated from Sheet
+
+var SHEET_ID = '1hb1v6NhPlEf1LyR4YFMB-tSldeXoi3g2mkP8YmI_8DQ';
+// Public CSV export URLs per sheet tab
+var URL_SUBSTACK = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&sheet=Substack';
+var URL_KPI      = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&sheet=Substack+KPIs';
+
+function parseCSV(text) {
+  var lines = text.trim().split('\n');
+  var headers = lines[0].split(',').map(function(h){ return h.replace(/"/g,'').trim(); });
+  return lines.slice(1).map(function(line) {
+    // handle quoted fields with commas
+    var cols = []; var cur = ''; var inQ = false;
+    for (var i=0; i<line.length; i++) {
+      var c = line[i];
+      if (c==='"') { inQ=!inQ; }
+      else if (c===',' && !inQ) { cols.push(cur.trim()); cur=''; }
+      else { cur+=c; }
+    }
+    cols.push(cur.trim());
+    var obj = {};
+    headers.forEach(function(h,i){ obj[h] = (cols[i]||'').replace(/^"|"$/g,''); });
+    return obj;
+  });
+}
+
+function updateKPI(data) {
+  if (!data || !data[0]) return;
+  var row = data[0];
+  var subs = parseInt(row['Suscriptores']) || 0;
+  var meta = parseInt(row['Meta']) || 1000;
+  var faltan = parseInt(row['Faltan']) || (meta - subs);
+  var avance = row['Avance'] || Math.round(subs/meta*100) + '%';
+  // Update chart header
+  var el = document.getElementById('subsCounter');
+  if (el) el.innerHTML = subs.toLocaleString() + ' / ' + meta.toLocaleString() +
+    ' — <span style="color:var(--texto-suave);font-weight:400;">faltan ' + faltan + '</span>';
+}
+
+function loadSheetData() {
+  // Load KPI first (fast)
+  fetch(URL_KPI)
+    .then(function(r){ return r.text(); })
+    .then(function(t){ updateKPI(parseCSV(t)); })
+    .catch(function(){});
+
+  // Load Substack data for chart
+  fetch(URL_SUBSTACK)
+    .then(function(r){ return r.text(); })
+    .then(function(t) {
+      var rows = parseCSV(t);
+      subsData = rows
+        .filter(function(r){ return r['Fecha'] && r['Suscriptores']; })
+        .map(function(r) {
+          // Normalize date: could be 2025/10/27 or 2026-05-20 etc.
+          var d = r['Fecha'].replace(/-/g,'/');
+          return { d: d, s: parseInt(r['Suscriptores'])||0, h: r['Hitos']||'' };
+        })
+        .filter(function(r){ return !isNaN(r.s) && r.s > 0; });
+      drawChart();
+    })
+    .catch(function(e){
+      console.warn('Could not load Sheet, using cached data', e);
+      // Fallback: last known data so chart always renders
+      if (subsData.length === 0) {
+        subsData = [
+          {d:'2025/10/27',s:1,h:''},{d:'2025/12/01',s:6,h:'Blog: Atreviéndonos a usar nuestra voz'},
+          {d:'2025/12/16',s:146,h:'Blog: De Demostrar a Compartir'},{d:'2025/12/31',s:170,h:''},
+          {d:'2026/01/15',s:180,h:'Blog: Permitiéndonos soñar en 2026'},
+          {d:'2026/01/29',s:189,h:'Blog: Liderar con intención'},
+          {d:'2026/02/17',s:194,h:'Blog: No puedes hacerlo todo'},
+          {d:'2026/03/05',s:201,h:'Blog: De Mejorar a Crecer'},
+          {d:'2026/03/26',s:210,h:'Blog: Cuando el propósito no es suficiente'},
+          {d:'2026/05/05',s:224,h:'Newsletter Mayo: Deja de correr detrás de la IA'},
+          {d:'2026/05/07',s:227,h:'Blog: De asumir a preguntar'},
+          {d:'2026/05/20',s:232,h:'Inicio Meta Ads'},
+          {d:'2026/05/25',s:355,h:''},{d:'2026/05/28',s:361,h:'Blog: No cedas quién eres por un sí'},
+          {d:'2026/05/29',s:437,h:''},
+          {d:'2026/06/02',s:446,h:'Newsletter Junio: No cedas quién eres por un sí'},
+          {d:'2026/06/03',s:451,h:'Inicio botones personalizados LinkedIn'},
+          {d:'2026/06/04',s:596,h:''},{d:'2026/06/05',s:617,h:'1er envío correo A/B'},
+          {d:'2026/06/10',s:697,h:'Pausa de Ads'},
+          {d:'2026/06/11',s:702,h:'Blog: Piensas que no puedes. Hasta que puedes.'},
+          {d:'2026/06/19',s:777,h:'2do envío correo A/B · Reinicio Ads'},
+          {d:'2026/06/22',s:809,h:''}
+        ];
+      }
+      drawChart();
+    });
+}
+
+function drawChart() {
+  var canvas = document.getElementById('subsChart');
+  if (!canvas) return;
+  if (!subsData || subsData.length === 0) return; // nothing to draw yet
+  var W = canvas.offsetWidth; var H = 220;
+  canvas.width = W * window.devicePixelRatio;
+  canvas.height = H * window.devicePixelRatio;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  var ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+  var PAD = {t:10, r:16, b:30, l:44};
+  var cW = W - PAD.l - PAD.r;
+  var cH = H - PAD.t - PAD.b;
+
+  // Scales
+  var dates = subsData.map(function(d){ return new Date(d.d).getTime(); });
+  var minD = dates[0], maxD = dates[dates.length-1];
+  var maxS = 1000; // goal line
+
+  function xPos(ts){ return PAD.l + (ts - minD)/(maxD - minD) * cW; }
+  function yPos(v){ return PAD.t + cH - (v/maxS)*cH; }
+
+  // Grid lines + Y labels
+  ctx.strokeStyle = '#ebebeb'; ctx.lineWidth = 1;
+  [0,250,500,750,1000].forEach(function(v){
+    var y = yPos(v);
+    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(PAD.l+cW, y); ctx.stroke();
+    ctx.fillStyle = '#bbb'; ctx.font = '9px Libre Franklin, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(v === 1000 ? '1K' : v, PAD.l - 6, y + 3);
+  });
+
+  // Goal line dashed
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(PAD.l, yPos(1000)); ctx.lineTo(PAD.l+cW, yPos(1000)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Area fill
+  ctx.beginPath();
+  ctx.moveTo(xPos(dates[0]), yPos(subsData[0].s));
+  subsData.forEach(function(pt,i){ ctx.lineTo(xPos(dates[i]), yPos(pt.s)); });
+  ctx.lineTo(xPos(dates[dates.length-1]), PAD.t+cH);
+  ctx.lineTo(xPos(dates[0]), PAD.t+cH);
+  ctx.closePath();
+  var grad = ctx.createLinearGradient(0, PAD.t, 0, PAD.t+cH);
+  grad.addColorStop(0,'rgba(255,121,3,0.18)'); grad.addColorStop(1,'rgba(255,121,3,0)');
+  ctx.fillStyle = grad; ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = '#ff7903'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+  subsData.forEach(function(pt,i){
+    var x = xPos(dates[i]), y = yPos(pt.s);
+    i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+
+  // Milestone dots
+  subsData.forEach(function(pt,i){
+    if (!pt.h) return;
+    var x = xPos(dates[i]), y = yPos(pt.s);
+    ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI*2);
+    ctx.fillStyle = '#ff7903'; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+  });
+
+  // X axis labels (sparse)
+  var labelDates = ['2025/12/01','2026/02/01','2026/04/01','2026/05/20','2026/06/22'];
+  var labelText =  ['Dic 2025','Feb 2026','Abr 2026','Meta Ads','Hoy'];
+  ctx.fillStyle = '#bbb'; ctx.font = '9px Libre Franklin, sans-serif'; ctx.textAlign = 'center';
+  labelDates.forEach(function(ld,i){
+    var x = xPos(new Date(ld).getTime());
+    ctx.fillText(labelText[i], x, H - 8);
+  });
+
+  // Store positions for hover
+  canvas._pts = subsData.map(function(pt,i){ return {x: xPos(dates[i]), y: yPos(pt.s), d:pt.d, s:pt.s, h:pt.h}; });
+}
+
+function formatDate(str) {
+  var d = new Date(str);
+  var months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+window.addEventListener('load', function(){
+  // Set today's date in header
+  var months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  var now = new Date();
+  var el = document.getElementById('lastUpdated');
+  if (el) el.textContent = 'Actualizado ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  loadSheetData(); // fetches Sheet then calls drawChart
+  var canvas = document.getElementById('subsChart');
+  var tt = document.getElementById('chartTooltip');
+  var ttDate = document.getElementById('ttDate');
+  var ttSubs = document.getElementById('ttSubs');
+  var ttHito = document.getElementById('ttHito');
+
+  canvas.addEventListener('mousemove', function(e){
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var pts = canvas._pts; if (!pts) return;
+    // Find closest point
+    var best = null, bestDist = 999;
+    pts.forEach(function(p){
+      var d = Math.abs(p.x - mx);
+      if (d < bestDist){ bestDist = d; best = p; }
+    });
+    if (!best || bestDist > 30) { tt.style.display='none'; return; }
+    // Position tooltip
+    var tx = best.x + rect.left - canvas.getBoundingClientRect().left;
+    var ty = best.y - 10;
+    tt.style.display = 'block';
+    tt.style.left = Math.min(tx - 10, canvas.offsetWidth - 210) + 'px';
+    tt.style.top = Math.max(ty - 70, 4) + 'px';
+    ttDate.textContent = formatDate(best.d);
+    ttSubs.textContent = best.s.toLocaleString() + ' suscriptores';
+    ttHito.textContent = best.h || '';
+    ttHito.style.display = best.h ? 'block' : 'none';
+  });
+  canvas.addEventListener('mouseleave', function(){ tt.style.display='none'; });
+
+  // Redraw on resize
+  window.addEventListener('resize', drawChart);
+});
 </script>
 </body>
 </html>
